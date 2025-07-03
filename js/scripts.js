@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Function to initialize the Google Map
-window.initMap = function() {
+window.initMap = async function() {
     console.log('Initializing Google Map...');
     
     // Check if map container exists
@@ -37,10 +37,16 @@ window.initMap = function() {
         return;
     }
     
-    // Use configuration for studio location
-    const studioLocation = MAPS_CONFIG.STUDIO_LOCATION;
-
     try {
+        // Import the marker library for AdvancedMarkerElement
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        
+        // Stepbridge Studios coordinates
+        const studioLocation = {
+            lat: 35.6870,
+            lng: -105.9378
+        };
+
         // Create the map
         const map = new google.maps.Map(mapContainer, {
             zoom: 16,
@@ -60,17 +66,16 @@ window.initMap = function() {
             ]
         });
 
-        // Add a marker for the studio location
-        const marker = new google.maps.Marker({
+        // Add an advanced marker for the studio location
+        const marker = new AdvancedMarkerElement({
             position: studioLocation,
             map: map,
-            title: 'Stepbridge Studios',
-            animation: google.maps.Animation.DROP
+            title: 'Stepbridge Studios'
         });
 
         // Add an info window
         const infoWindow = new google.maps.InfoWindow({
-            content: '<div style="padding: 10px;"><strong>Stepbridge Studios</strong><br>' + MAPS_CONFIG.STUDIO_ADDRESS + '</div>'
+            content: '<div style="padding: 10px;"><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</div>'
         });
 
         // Show info window on marker click
