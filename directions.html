@@ -102,6 +102,7 @@
     <footer>
         <p>&copy; 2024 Stepbridge Studios. All rights reserved.</p>
     </footer>
+    <script src="js/config.js"></script>
     <script src="js/scripts.js"></script>
     <script>
         // Debug Google Maps API loading
@@ -111,26 +112,17 @@
                 console.error('Google Maps API not loaded');
             } else {
                 console.log('Google Maps API loaded successfully');
-                console.log('Available Google Maps services:', Object.keys(google.maps));
             }
-        });
-        
-        // Additional error handling
-        window.addEventListener('error', function(e) {
-            console.error('Script error:', e.error);
         });
     </script>
     <script>
-        // Debug Google Maps API loading
-        window.addEventListener('load', function() {
-            console.log('Page loaded, checking for Google Maps API...');
-            if (typeof google === 'undefined') {
-                console.error('Google Maps API not loaded');
-            } else {
-                console.log('Google Maps API loaded successfully');
-            }
-        });
+        // Load Google Maps API with key from config
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_CONFIG.API_KEY}&callback=initMap&libraries=marker`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = handleMapError;
+        document.head.appendChild(script);
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlOFYtKPdYjiihl0URU6bkeuKgOg4DGNE&callback=initMap&libraries=marker" async defer onerror="handleMapError()"></script>
 </body>
 </html>

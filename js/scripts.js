@@ -40,11 +40,8 @@ window.initMap = function() {
     }
     
     try {
-        // Stepbridge Studios coordinates
-        const studioLocation = {
-            lat: 35.6870,
-            lng: -105.9378
-        };
+        // Use configuration for studio location
+        const studioLocation = MAPS_CONFIG.STUDIO_LOCATION;
 
         // Create the map
         const map = new google.maps.Map(mapContainer, {
@@ -75,7 +72,7 @@ window.initMap = function() {
 
         // Add an info window
         const infoWindow = new google.maps.InfoWindow({
-            content: '<div style="padding: 10px;"><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</div>'
+            content: '<div style="padding: 10px;"><strong>Stepbridge Studios</strong><br>' + MAPS_CONFIG.STUDIO_ADDRESS + '</div>'
         });
 
         // Show info window on marker click
