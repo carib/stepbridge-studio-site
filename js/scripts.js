@@ -22,12 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Initialize lightbox
-    initLightbox();
+    // Initialize lightbox only if lightbox elements exist
+    if (document.getElementById('lightbox')) {
+        initLightbox();
+    }
 });
 
 // Function to initialize the Google Map
-window.initMap = async function() {
+window.initMap = function() {
     console.log('Initializing Google Map...');
     
     // Check if map container exists
@@ -38,9 +40,6 @@ window.initMap = async function() {
     }
     
     try {
-        // Import the marker library for AdvancedMarkerElement
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-        
         // Stepbridge Studios coordinates
         const studioLocation = {
             lat: 35.6870,
@@ -66,11 +65,12 @@ window.initMap = async function() {
             ]
         });
 
-        // Add an advanced marker for the studio location
-        const marker = new AdvancedMarkerElement({
+        // Add a marker for the studio location (using standard Marker to avoid Map ID requirement)
+        const marker = new google.maps.Marker({
             position: studioLocation,
             map: map,
-            title: 'Stepbridge Studios'
+            title: 'Stepbridge Studios',
+            animation: google.maps.Animation.DROP
         });
 
         // Add an info window
@@ -89,11 +89,26 @@ window.initMap = async function() {
         console.log('Google Map initialized successfully');
     } catch (error) {
         console.error('Error initializing Google Map:', error);
+        // Fallback to static display if map fails
         mapContainer.innerHTML = `
-            <div style="padding: 20px; text-align: center; color: #666;">
-                <p>Unable to load interactive map.</p>
-                <p><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</p>
-                <p><a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="color: #3498db; text-decoration: none;">Open in Google Maps</a></p>
+            <div style="padding: 20px; text-align: center; color: #333; background: #f8f9fa; border-radius: 8px; height: 400px; display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="margin-bottom: 15px; color: #2c3e50;">Stepbridge Studios</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 10px;"><strong>528 Jose Street</strong></p>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;"><strong>Santa Fe, NM 87501</strong></p>
+                <div style="margin-bottom: 20px;">
+                    <a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">
+                        📍 Open in Google Maps
+                    </a>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <a href="https://www.google.com/maps/dir//528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #27ae60; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">
+                        🚗 Get Directions
+                    </a>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; margin: 0;">
+                    Contact: <a href="tel:505-988-7051" style="color: #3498db;">505-988-7051</a> | 
+                    <a href="tel:505-992-0356" style="color: #3498db;">505-992-0356</a>
+                </p>
             </div>
         `;
     }
