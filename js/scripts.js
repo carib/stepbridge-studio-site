@@ -28,46 +28,70 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to initialize the Google Map
 window.initMap = function() {
-    // Stepbridge Studios coordinates
-    const studioLocation = {
-        lat: 35.6869,
-        lng: -105.9378
-    };
+    console.log('Initializing Google Map...');
+    
+    // Check if map container exists
+    const mapContainer = document.querySelector('.map-container');
+    if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+    }
+    
+    // Use configuration for studio location
+    const studioLocation = MAPS_CONFIG.STUDIO_LOCATION;
 
-    // Create the map
-    const map = new google.maps.Map(document.querySelector('.map-container'), {
-        zoom: 15,
-        center: studioLocation,
-        styles: [
-            {
-                "featureType": "all",
-                "elementType": "geometry",
-                "stylers": [{"color": "#f5f5f5"}]
-            },
-            {
-                "featureType": "water",
-                "elementType": "geometry",
-                "stylers": [{"color": "#e9e9e9"}, {"lightness": 17}]
-            }
-        ]
-    });
+    try {
+        // Create the map
+        const map = new google.maps.Map(mapContainer, {
+            zoom: 16,
+            center: studioLocation,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: [
+                {
+                    "featureType": "all",
+                    "elementType": "geometry",
+                    "stylers": [{"color": "#f5f5f5"}]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [{"color": "#e9e9e9"}, {"lightness": 17}]
+                }
+            ]
+        });
 
-    // Add a marker for the studio location
-    const marker = new google.maps.Marker({
-        position: studioLocation,
-        map: map,
-        title: 'Stepbridge Studios'
-    });
+        // Add a marker for the studio location
+        const marker = new google.maps.Marker({
+            position: studioLocation,
+            map: map,
+            title: 'Stepbridge Studios',
+            animation: google.maps.Animation.DROP
+        });
 
-    // Add an info window
-    const infoWindow = new google.maps.InfoWindow({
-        content: '<div><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM</div>'
-    });
+        // Add an info window
+        const infoWindow = new google.maps.InfoWindow({
+            content: '<div style="padding: 10px;"><strong>Stepbridge Studios</strong><br>' + MAPS_CONFIG.STUDIO_ADDRESS + '</div>'
+        });
 
-    // Show info window on marker click
-    marker.addListener('click', () => {
+        // Show info window on marker click
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+        
+        // Show info window by default
         infoWindow.open(map, marker);
-    });
+        
+        console.log('Google Map initialized successfully');
+    } catch (error) {
+        console.error('Error initializing Google Map:', error);
+        mapContainer.innerHTML = `
+            <div style="padding: 20px; text-align: center; color: #666;">
+                <p>Unable to load interactive map.</p>
+                <p><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</p>
+                <p><a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="color: #3498db; text-decoration: none;">Open in Google Maps</a></p>
+            </div>
+        `;
+    }
 };
 
 // Handle Google Maps API loading errors
@@ -75,7 +99,13 @@ window.handleMapError = function() {
     console.error('Error loading Google Maps API');
     const mapContainer = document.querySelector('.map-container');
     if (mapContainer) {
-        mapContainer.innerHTML = '<p>Unable to load map. Please try again later.</p>';
+        mapContainer.innerHTML = `
+            <div style="padding: 20px; text-align: center; color: #666;">
+                <p>Unable to load interactive map.</p>
+                <p><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</p>
+                <p><a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="color: #3498db; text-decoration: none;">Open in Google Maps</a></p>
+            </div>
+        `;
     }
 };
 

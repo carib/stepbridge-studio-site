@@ -102,7 +102,41 @@
     <footer>
         <p>&copy; 2024 Stepbridge Studios. All rights reserved.</p>
     </footer>
+    <script src="js/config.js"></script>
     <script src="js/scripts.js"></script>
+    <script>
+        // Debug Google Maps API loading
+        window.addEventListener('load', function() {
+            console.log('Page loaded, checking for Google Maps API...');
+            if (typeof google === 'undefined') {
+                console.error('Google Maps API not loaded');
+            } else {
+                console.log('Google Maps API loaded successfully');
+                console.log('Available Google Maps services:', Object.keys(google.maps));
+            }
+        });
+        
+        // Additional error handling
+        window.addEventListener('error', function(e) {
+            console.error('Script error:', e.error);
+        });
+    </script>
+    <script>
+        // Check if we're on the directions page and show fallback immediately
+        window.addEventListener('load', function() {
+            const mapContainer = document.querySelector('.map-container');
+            if (mapContainer) {
+                // Show a fallback while we try to load the map
+                mapContainer.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #666;">
+                        <p>Loading map...</p>
+                        <p><strong>Stepbridge Studios</strong><br>528 Jose Street<br>Santa Fe, NM 87501</p>
+                        <p><a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="color: #3498db; text-decoration: none;">Open in Google Maps</a></p>
+                    </div>
+                `;
+            }
+        });
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHLIRFR2KGYFQFIgE5HdPisPL6lKLaCf4&callback=initMap&libraries=marker" async defer onerror="handleMapError()"></script>
 </body>
 </html>
