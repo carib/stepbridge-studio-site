@@ -32,17 +32,33 @@ jobs:
         
     - name: Create config file
       run: |
-        cat > js/config.js << EOF
-        // Google Maps API Configuration
-        const MAPS_CONFIG = {
-            API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}',
-            STUDIO_LOCATION: {
-                lat: 35.6870,
-                lng: -105.9378
-            },
-            STUDIO_ADDRESS: '528 Jose Street, Santa Fe, NM 87501'
-        };
-        EOF
+        if [ -n "${{ secrets.GOOGLE_MAPS_API_KEY }}" ]; then
+          cat > js/config.js << EOF
+          // Google Maps API Configuration
+          const MAPS_CONFIG = {
+              API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}',
+              STUDIO_LOCATION: {
+                  lat: 35.6870,
+                  lng: -105.9378
+              },
+              STUDIO_ADDRESS: '528 Jose Street, Santa Fe, NM 87501'
+          };
+          EOF
+          echo "Config file created with API key"
+        else
+          cat > js/config.js << EOF
+          // Google Maps API Configuration (No API key provided)
+          const MAPS_CONFIG = {
+              API_KEY: 'NO_API_KEY_PROVIDED',
+              STUDIO_LOCATION: {
+                  lat: 35.6870,
+                  lng: -105.9378
+              },
+              STUDIO_ADDRESS: '528 Jose Street, Santa Fe, NM 87501'
+          };
+          EOF
+          echo "Config file created without API key - please add GOOGLE_MAPS_API_KEY to repository secrets"
+        fi
         
     - name: Setup Pages
       uses: actions/configure-pages@v4

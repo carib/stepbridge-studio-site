@@ -117,12 +117,40 @@
     </script>
     <script>
         // Load Google Maps API with key from config
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_CONFIG.API_KEY}&callback=initMap&libraries=marker`;
-        script.async = true;
-        script.defer = true;
-        script.onerror = handleMapError;
-        document.head.appendChild(script);
+        if (typeof MAPS_CONFIG !== 'undefined' && MAPS_CONFIG.API_KEY && MAPS_CONFIG.API_KEY !== 'NO_API_KEY_PROVIDED') {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_CONFIG.API_KEY}&callback=initMap&libraries=marker`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        } else {
+            // Show fallback when no API key is provided
+            const mapContainer = document.querySelector('.map-container');
+            if (mapContainer) {
+                mapContainer.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #333; background: #f8f9fa; border-radius: 8px; height: 400px; display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="margin-bottom: 15px; color: #2c3e50;">Stepbridge Studios</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 10px;"><strong>528 Jose Street</strong></p>
+                        <p style="font-size: 1.1rem; margin-bottom: 20px;"><strong>Santa Fe, NM 87501</strong></p>
+                        <div style="margin-bottom: 20px;">
+                            <a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">
+                                📍 Open in Google Maps
+                            </a>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <a href="https://www.google.com/maps/dir//528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #27ae60; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">
+                                🚗 Get Directions
+                            </a>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin: 0;">
+                            Contact: <a href="tel:505-988-7051" style="color: #3498db;">505-988-7051</a> | 
+                            <a href="tel:505-992-0356" style="color: #3498db;">505-992-0356</a>
+                        </p>
+                    </div>
+                `;
+            }
+        }
     </script>
 </body>
 </html>
