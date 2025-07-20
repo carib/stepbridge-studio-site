@@ -45,21 +45,22 @@ window.initMap = function() {
 
         // Create the map
         const map = new google.maps.Map(mapContainer, {
-            zoom: 16,
+            zoom: 18, // Increased zoom for more detail
             center: studioLocation,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            styles: [
-                {
-                    "featureType": "all",
-                    "elementType": "geometry",
-                    "stylers": [{"color": "#f5f5f5"}]
-                },
-                {
-                    "featureType": "water",
-                    "elementType": "geometry",
-                    "stylers": [{"color": "#e9e9e9"}, {"lightness": 17}]
-                }
-            ]
+            // Remove custom styling to show more detail
+            // styles: [
+            //     {
+            //         "featureType": "all",
+            //         "elementType": "geometry",
+            //         "stylers": [{"color": "#f5f5f5"}]
+            //     },
+            //     {
+            //         "featureType": "water",
+            //         "elementType": "geometry",
+            //         "stylers": [{"color": "#e9e9e9"}, {"lightness": 17}]
+            //     }
+            // ]
         });
 
         // Add a marker for the studio location (using standard Marker to avoid Map ID requirement)
