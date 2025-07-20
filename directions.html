@@ -16,9 +16,9 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="services-rates.html">Services & Rates</a></li>
-                                        <li><a href="connections.html">Specs & Formats</a></li>
-                        <li><a href="audiobook.html">Audiobooks</a></li>
-                        <li><a href="terms-of-service.html">Terms of Service</a></li>
+                <li><a href="connections.html">Specs & Formats</a></li>
+                <li><a href="audiobook.html">Audiobooks</a></li>
+                <li><a href="terms-of-service.html">Terms of Service</a></li>
                 <li><a href="directions.html">Directions to Studio</a></li>
                 <li><a href="covid-19.html">COVID-19</a></li>
             </ul>
@@ -30,7 +30,34 @@
             
             <div class="directions-content">
                 <div class="map-container">
-                    <!-- Map will be added via JavaScript -->
+                    <!-- Interactive Google Map will be loaded here -->
+                    <!-- Fallback content that shows if map fails to load -->
+                    <div id="map-fallback" style="display: none; padding: 30px; text-align: center; color: #333; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; height: 400px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="margin-bottom: 15px; color: #2c3e50; font-size: 1.5rem;">📍 Stepbridge Studios Location</h3>
+                            <p style="font-size: 1.2rem; margin-bottom: 8px; font-weight: 600; color: #34495e;">528 Jose Street</p>
+                            <p style="font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; color: #34495e;">Santa Fe, NM 87501</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <a href="https://maps.google.com/maps?q=528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #3498db; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background-color 0.3s ease; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(52,152,219,0.3);">
+                                📍 Open in Google Maps
+                            </a>
+                            <br>
+                            <a href="https://www.google.com/maps/dir//528+Jose+Street+Santa+Fe+NM" target="_blank" style="display: inline-block; background-color: #27ae60; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(39,174,96,0.3);">
+                                🚗 Get Directions
+                            </a>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <p style="font-size: 0.95rem; color: #666; margin: 0; line-height: 1.4;">
+                                <strong>Contact:</strong><br>
+                                📞 <a href="tel:505-988-7051" style="color: #3498db; text-decoration: none;">505-988-7051</a> (Main)<br>
+                                📱 <a href="tel:505-992-0356" style="color: #3498db; text-decoration: none;">505-992-0356</a> (Mobile)<br>
+                                ✉️ <a href="mailto:info@stepbridge.com" style="color: #3498db; text-decoration: none;">info@stepbridge.com</a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="address-info">
@@ -108,26 +135,57 @@
     <script src="js/config.js"></script>
     <script src="js/scripts.js"></script>
     <script>
-        // Debug Google Maps API loading
+        // Enhanced debugging for Google Maps API
         window.addEventListener('load', function() {
-            console.log('Page loaded, checking for Google Maps API...');
-            if (typeof google === 'undefined') {
-                console.error('Google Maps API not loaded');
-            } else {
-                console.log('Google Maps API loaded successfully');
+            console.log('=== GOOGLE MAPS DEBUG ===');
+            console.log('Page loaded');
+            console.log('MAPS_CONFIG available:', typeof MAPS_CONFIG !== 'undefined');
+            if (typeof MAPS_CONFIG !== 'undefined') {
+                console.log('API_KEY:', MAPS_CONFIG.API_KEY ? 'Present' : 'Missing');
+                console.log('STUDIO_LOCATION:', MAPS_CONFIG.STUDIO_LOCATION);
             }
+            console.log('Google Maps API loaded:', typeof google !== 'undefined');
+            if (typeof google !== 'undefined') {
+                console.log('Google Maps version:', google.maps.version);
+            }
+            console.log('========================');
         });
-    </script>
-    <script>
-        // Load Google Maps API with key from config
+
+        // Load Google Maps API with enhanced error handling
         if (typeof MAPS_CONFIG !== 'undefined' && MAPS_CONFIG.API_KEY && MAPS_CONFIG.API_KEY !== 'NO_API_KEY_PROVIDED') {
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_CONFIG.API_KEY}&callback=initMap&libraries=marker`;
-            script.async = true;
-            script.defer = true;
-            script.onerror = handleMapError;
-            document.head.appendChild(script);
+            console.log('Loading Google Maps API...');
+            
+            // Set a timeout to show fallback if map doesn't load
+            setTimeout(() => {
+                const mapContainer = document.querySelector('.map-container');
+                if (mapContainer && !mapContainer.querySelector('div[style*="border-radius"]')) {
+                    console.log('Map loading timeout, showing fallback');
+                    handleMapError();
+                }
+            }, 10000); // 10 second timeout
+            
+            // Load the interactive map directly since API key is properly configured
+            loadMapScript();
+            
+            function loadMapScript() {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_CONFIG.API_KEY}&callback=initMap&libraries=marker`;
+                script.async = true;
+                script.defer = true;
+                
+                script.onload = function() {
+                    console.log('Google Maps API script loaded successfully');
+                };
+                
+                script.onerror = function() {
+                    console.error('Failed to load Google Maps API script');
+                    handleMapError();
+                };
+                
+                document.head.appendChild(script);
+            }
         } else {
+            console.log('No API key provided, showing fallback');
             // Show fallback when no API key is provided
             const mapContainer = document.querySelector('.map-container');
             if (mapContainer) {

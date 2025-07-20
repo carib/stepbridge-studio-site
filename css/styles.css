@@ -331,6 +331,14 @@ main h2 {
     margin-top: 1rem;
     background-color: #f8f9fa;
     border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ensure Google Maps loads properly */
+.map-container > div {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* About section */
