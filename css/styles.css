@@ -791,6 +791,15 @@ footer {
 
     .hero {
         grid-template-columns: 1fr;
+        grid-template-areas: "image" "content";
+    }
+    
+    .hero-image {
+        grid-area: image;
+    }
+    
+    .hero-content {
+        grid-area: content;
     }
 
     .equipment-hero {
